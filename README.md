@@ -1,0 +1,1 @@
+# drt-locked-egld-aggregator-service
