@@ -1,1 +1,1 @@
-# drt-locked-egld-aggregator-service
+# drt-locked-rewa-aggregator-service
