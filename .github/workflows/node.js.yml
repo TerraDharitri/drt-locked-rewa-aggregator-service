@@ -1,13 +1,10 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
-
 name: Node.js CI
 
 on:
   push:
-    branches: [main, development, feat/**]
+    branches: [main, development, 'feat/**']
   pull_request:
-    branches: [main, development, feat/**]
+    branches: [main, development, 'feat/**']
 
 jobs:
   build:
@@ -17,27 +14,34 @@ jobs:
         node-version: [18.x]
 
     steps:
+      # Checkout the repository
       - uses: actions/checkout@v3
 
+      # Setup Node.js and enable npm caching
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
-      - run: npm ci --legacy-peer-deps
+      # Install dependencies with legacy peer deps option
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
 
-      - run: npm test
+      # Run your tests (assuming it runs your unit tests)
+      - name: Run tests
+        run: npm test
 
-    
+      # Run coverage script (make sure your package.json has "test:cov" script)
       - name: Collect code coverage
         run: npm run test:cov
 
-
-      - uses: codecov/codecov-action@v3
+      # Upload coverage to Codecov
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage/unit/clover.xml
+          token: ${{ secrets.CODECOV_TOKEN }}       # Provide token if repo is private
+          files: ./coverage/unit/clover.xml          # Path to your coverage report
           flags: unittests
           name: codecov-umbrella
           fail_ci_if_error: true
