@@ -14,34 +14,28 @@ jobs:
         node-version: [18.x]
 
     steps:
-      # Checkout the repository
       - uses: actions/checkout@v3
 
-      # Setup Node.js and enable npm caching
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
-      # Install dependencies with legacy peer deps option
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
 
-      # Run your tests (assuming it runs your unit tests)
       - name: Run tests
         run: npm test
 
-      # Run coverage script (make sure your package.json has "test:cov" script)
       - name: Collect code coverage
         run: npm run test:cov
 
-      # Upload coverage to Codecov
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}       # Provide token if repo is private
-          files: ./coverage/unit/clover.xml          # Path to your coverage report
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/unit/clover.xml
           flags: unittests
           name: codecov-umbrella
           fail_ci_if_error: true
